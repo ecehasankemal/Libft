@@ -1,63 +1,111 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hece  <hece@student.42kocaeli.com.tr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/26 01:00:31 by hece              #+#    #+#             */
+/*   Updated: 2022/09/26 01:00:36 by hece             ###   ########.tr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
+// ft_word_counter bizim ayırmak istediğimiz karakter dısında
+// kalan string elemanlarının lenini hesaplar
 
-// TAM OLARAK ANLAMADIM TEKRAR BAKICAM:::::::: SAATLERİMİ UEDİ HAYVAN HERİF
+// ft_word_dup gönderien stringin gönderilen basşalngıc kısmından
+// son kısmına kadar ki kısmı bir stringe atar ve döndürür
 
-//44 de ayiriilari bulup onun icin bir string dizisi olustuyoruz.
-//55. satırdaki while da ayırıcı varsa geçiyoruz. 
-//57. satırda bizim string dizimizin ilk elemanına yer açıyoruz. 
-//j değeri bizim stringin uzunluğu fatih mesela 5 lik alan null ile 6
-// 58 da arr nin a nıncı değerine s-j diyerek oradan başladığımızı belirterek 
-//j kadar yazdırıyoruz. yani fatih cil de ilkte s değeri fatih i bitirir ve
-//boslukta durur. sonra j 5 olur. s - 5 diyerek, fatih in f sine geri geliriz.
-// j + 1 diyerekte null ile birlikte 6 lık alana bunu yazdırır bknz ft_strlcpy.
+// split fonksiyonunda ise çift boyutlu bir ades oluşturuyoruz
+// ve adrese ilk baştaki stringden ft_word_counter fonksiyonu
+// sayesinde stringin kalan kısmı kadarlık kısmı kadar mallocla
+// ram de yer açıyoruz,,
+// sonra çift boyutlu adresin tek boyutlarına ft_word_dup sayesinde
+// oluşturdugumuz stringleri atıyoruz..
 
-//kaç adet string dizisi elemanı olduğunu hesaplar. 
-//"fatih-fatih-fatih" , '-' cevap 2 dir 2 adet ayırıcı var çünkü
+// örnekler en aşşagıda yorum satırında vesselam...
 
-unsigned int	str_in_array(const char *s, char delimiter)
+static int	ft_word_counter(const char *str, char c)
 {
-	unsigned int	qnt;
+	int	index;
+	int	dot;
+	int	trigger;
 
-	qnt = 0;
-	while (*s)
+	index = 0;
+	dot = 0;
+	trigger = 0;
+	while (str[index] != '\0')
 	{
-		if (*s == delimiter)
-			s++;
-		else
+		if (str[index] != c && trigger == 0)
 		{
-			while (*s != delimiter && *s)
-				s++;
-			qnt++;
+				trigger = 1;
+				dot++;
 		}
+		else if (str[index] == c)
+				trigger = 0;
+		index++;
 	}
-	return (qnt);
+	return (dot);
+}
+
+static char	*ft_word_dup(const char *str, int start, int end)
+{
+	int		index;
+	char	*word;
+
+	index = 0;
+	word = malloc(sizeof(char) * (end - start + 1));
+	if (!word)
+		return (NULL);
+	while (start < end)
+	{
+			word[index] = str[start];
+			start++;
+			index++;
+	}
+	word[index] = '\0';
+	return (word);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char			**arr;
-	unsigned int	j;
-	unsigned int	a;
+	char	**split;
+	size_t	index;
+	int		spindex;
+	int		start;
 
 	if (!s)
-		return (NULL);
-	arr = (char **) ft_calloc(str_in_array(s, c) + 1, sizeof(char *));
-	if (!arr)
-		return (NULL);
-	a = -1;
-	while (*s)
+		return (0);
+	index = -1;
+	spindex = 0;
+	start = -1;
+	split = malloc(sizeof(char *) * (ft_word_counter(s, c) + 1));
+	if (!split)
+		return (0);
+	while (++index <= ft_strlen(s))
 	{
-		if (*s == c)
-			s++;
-		else
+		if (s[index] != c && start < 0)
+			start = index;
+		else if ((s[index] == c || index == ft_strlen(s)) && start >= 0)
 		{
-			j = 0;
-			while (*s != c && *s && ++j)
-				s++;
-			arr[++a] = (char *) ft_calloc(j + 1, sizeof(char));
-			ft_strlcpy(arr[a], s - j, j + 1);
+			split[spindex++] = ft_word_dup(s, start, index);
+			start = -1;
 		}
 	}
-	return (arr);
+	split[spindex] = NULL;
+	return (split);
 }
+
+/*#include <stdio.h>
+int	main(void)
+{
+	char	delim = ' ';
+	char	*src = "hece herdaim bir numara";
+	char	**sonuc;
+	int		i = -1;
+	sonuc = ft_split(src, delim);
+	while (i++ < 4)
+		printf("%d. kisim: %s\n", i ,sonuc[i]);
+}*/
