@@ -14,6 +14,20 @@
 
 // ptr dizisini bytelenght'ye kadar value byte'i doldurur
 
+/*void	ft_putstr(char *str)
+{
+	int	index;
+
+	index = 0;
+	while (index < sizeof(str))
+	{
+		if (str[index] == '\0')
+			index++;
+		write(1, &str[index], 1);
+		index++;
+	}
+}*/
+
 void	*ft_memset(void *ptr, int value, size_t bytelenght)
 {
 	char	*str;
@@ -29,13 +43,15 @@ void	*ft_memset(void *ptr, int value, size_t bytelenght)
 	return (ptr);
 }
 
-/*#include <stdio.h>
-#include <string.h>
+/*
 int	main(void)
 {
-	char	*a = malloc(sizeof(char) * 5);
-	char	*b = malloc(sizeof(char) * 5);
-	char	src = 'A';
-	printf("org : %s, ", memset(a, src, 5));
-	printf("mine : %s", ft_memset(b, src, 5));
+	char	a[] = "hece\n";
+	char	mete[] = "hece";
+	ft_putstr(a);
+	ft_bzero(a, 3);
+	ft_putstr(a);
+	//ft_memset(mete, 'b', 3);
+	//ft_putstr(mete);
+
 }*/
