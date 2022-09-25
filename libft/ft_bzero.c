@@ -17,18 +17,34 @@
 // ft_bzero(str, 4); dersem
 // "0000n" çıktısını verir vesselam...
 
+/*void	ft_putstr(char *str)
+{
+	int	index;
+
+	index = 0;
+	while (index < sizeof(str))
+	{
+		if (str[index] == '\0')
+			index++;
+		write(1, &str[index], 1);
+		index++;
+	}
+}*/
+
 void	ft_bzero(void *ptr, size_t bytelenght)
 {
 	ft_memset(ptr, 0, bytelenght);
 }
 
-/*#include <stdio.h>
-
+/*
 int	main(void)
 {
-	char	a[] = "hece";
-	
-	printf("before : %s, ", a);
-	ft_bzero(a, sizeof(a));
-	printf("after : %s, ", a);
+	char	a[] = "hece\n";
+	char	mete[] = "hece";
+	ft_putstr(a);
+	ft_bzero(a, 3);
+	ft_putstr(a);
+	//ft_memset(mete, 'b', 3);
+	//ft_putstr(mete);
+
 }*/
